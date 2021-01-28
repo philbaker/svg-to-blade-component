@@ -13,7 +13,7 @@
 (def file-contents (mapv slurp file-names))
 
 (def file-contents-clean
-  (map #(clojure.string/replace-first % #">" " {{ \\$attributes->get('class', 'h5 w5 fill-current text-gray-900') }}>") 
+  (map #(clojure.string/replace-first % #">" " class=\"{{ \\$attributes->get('class', 'w6 h6 fill-current text-gray-900') }}>\"") 
     (map #(clojure.string/replace % #"(height|width)=\"([0-9]+)\"\s" "") file-contents)))
 
 (def file-names-clean 
