@@ -13,8 +13,8 @@
 (def file-contents (mapv slurp file-names))
 
 (def file-contents-clean
-  (map #(clojure.string/replace-first % #">" " class=\"{{ \\$attributes->get('class', 'w6 h6 fill-current text-gray-900') }}>\"") 
-    (map #(clojure.string/replace % #"(height|width)=\"([0-9]+)\"\s" "") file-contents)))
+  (map #(clojure.string/replace-first % #">" " class=\"{{ \\$attributes->get('class', 'w-6 h-6 fill-current text-gray-900') }}\">") 
+    (map #(clojure.string/replace % #"(height|width|fill)=\"(#?[0-9A-Za-z]*)\"\s?" "") file-contents)))
 
 (def file-names-clean 
   (map last
@@ -40,4 +40,5 @@
 (defn -main []
   (write-dir!)
   (write-files!)
-  (println file-names-no-ext))
+  (println file-names-no-ext)
+  (println (count file-names-no-ext)))
