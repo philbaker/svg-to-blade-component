@@ -1,11 +1,11 @@
 (ns icon-prep.core
   (:require [clojure.java.io :as io]))
 
-(def original-dir (io/file "/home/pb/Documents/figma-icons"))
-(def end-dir "/home/pb/Documents/blade-icons")
+(def start-dir (str (System/getProperty "user.home") "/Documents/svg-icons"))
+(def end-dir (str (System/getProperty "user.home") "/Documents/blade-icons"))
 
 (def file-names 
-  (->> original-dir
+  (->> (io/file start-dir)
        file-seq
        (filter #(.isFile %))
        (mapv #(.getAbsolutePath %))))
@@ -37,7 +37,7 @@
 (defn write-files! []
   (doall (map (fn [[key value]] (spit (str end-dir "/" key) value)) name-contents)))
 
-(defn -main []
+(defn -main [& args]
   (write-dir!)
   (write-files!)
   (println file-names-no-ext)
