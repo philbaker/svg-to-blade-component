@@ -12,22 +12,23 @@
 
 (def file-contents (mapv slurp file-names))
 
-(def file-contents-clean
-  (map #(clojure.string/replace-first % #">" " class=\"fill-current {{ \\$attributes->get('class', 'w-6 h-6 text-gray-900') }}\">") 
-    (map #(clojure.string/replace % #"(height|width|fill)=\"(#?[0-9A-Za-z]*)\"\s?" "") file-contents)))
-
-(def file-names-clean 
-  (map last
-       (map #(clojure.string/split % #"/") 
-            (map #(clojure.string/replace % #"svg" "blade.php") 
-                 (map #(clojure.string/replace % #"\s+" "-") 
-                      (mapv clojure.string/lower-case file-names))))))
+(def file-contents-blade
+  (->> 
+    (map #(clojure.string/replace % #"(height|width|fill)=\"(#?[0-9A-Za-z]*)\"\s?" "") file-contents)
+    (map #(clojure.string/replace-first % #">" " class=\"fill-current {{ \\$attributes->get('class', 'w-6 h-6 text-gray-900') }}\">"))))
+   
+(def file-names-blade
+  (->> (mapv clojure.string/lower-case file-names)
+       (map #(clojure.string/replace % #"\s+" "-"))
+       (map #(clojure.string/replace % #"svg" "blade.php"))
+       (map #(clojure.string/split % #"/"))
+       (map last)))
 
 (def file-names-no-ext
   (mapv #(str "icon." %)
-       (map #(clojure.string/replace % #".blade.php" "") file-names-clean)))
+       (map #(clojure.string/replace % #".blade.php" "") file-names-blade)))
 
-(def name-contents (zipmap file-names-clean file-contents-clean))
+(def name-contents (zipmap file-names-blade file-contents-blade))
 
 (defn write-dir! []
   (cond
