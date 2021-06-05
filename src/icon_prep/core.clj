@@ -15,8 +15,8 @@
 (def file-contents-blade
   (->> 
     (map #(clojure.string/replace % #"(height|width|fill)=\"(#?[0-9A-Za-z]*)\"\s?" "") file-contents)
-    (map #(clojure.string/replace-first % #">" " class=\"fill-current {{ \\$attributes->get('class', 'w-6 h-6 text-gray-900') }}\">"))))
-   
+    (map #(clojure.string/replace-first % #">" " class=\"fill-current {{ \\$attributes->get('class', 'w-6 h-6 text-gray-900') }}\" {{ \\$attributes->filter(fn (\\$value, \\$key) => \\$key !== 'class') }}>"))))
+
 (def file-names-blade
   (->> (mapv clojure.string/lower-case file-names)
        (map #(clojure.string/replace % #"\s+" "-"))
